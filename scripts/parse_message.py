@@ -1,6 +1,7 @@
 from json import loads
 import html
 from bs4 import BeautifulSoup
+from time import ctime
 
 
 class rank_colors:
@@ -51,7 +52,7 @@ def get_rank_color(x):
         return False
 
 
-def parse_message(raw: str) -> None:
+def parse_message(raw: str, LOG) -> None:
     data = raw[21:-1]
     try:
         rank = data.split("\|")[0].split('"')[-1].replace('rf_', '').replace(
@@ -77,14 +78,15 @@ def parse_message(raw: str) -> None:
         name = soup.get_text().split('"nick":"')[1].split('","')[0]
 
         print(f"{rankColor}[{rank}] {name}\033[0m: {msg}")
+        if LOG:
+            with open("log.txt", "a") as f:
+                f.write(f"{ctime()}: [{rank}] {name}: {msg}" + "\n")
+
     except:
         print("Error parsing the message.")
-        print(name)
-        print(ranks)
-        print(msg)
-        print(data)
 
-def parse(raw, DEBUG=False, discord=False):
+
+def parse(raw, LOG, DEBUG=False):
     raw = raw.replace('class="', "class=|")
     raw = raw.replace('">', "|>")
     raw = html.unescape(raw)
@@ -96,7 +98,7 @@ def parse(raw, DEBUG=False, discord=False):
         New message
         """
         
-        parse_message(raw)
+        parse_message(raw, LOG)
 # TODO: implement the other packets.
 # Maybe a /members or something so see online members?
 # This would require to keep track of difficult stuff

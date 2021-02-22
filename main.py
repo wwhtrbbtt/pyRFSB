@@ -6,7 +6,8 @@ if __name__ == "__main__":
     main(
         settings["debug"],
         settings["signature"],
-        settings["token"]
+        settings["token"],
+        settings["chatlog"]
     )
 
 

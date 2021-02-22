@@ -54,6 +54,24 @@ def commands(msg):
         print("/open - open raidforums.com in your browser")
         print("/emojis - see all available emojis")
         print("/commands - see all available commands")
+        print("/setsignature <newSignature> - change your signature")
+        print("/togglelog - toggle if you wanna log all messages into a text file")
+        print("/toggledebug - toggle debug mode")
 
-    # elif msg == "/signature":
-    #     print("ok")
+    elif msg.startswith("/setsignature "):
+        from scripts.client import change_signature
+
+        new = msg.split(" ")[1:]
+        if type(new) == list:
+            new = " ".join(new)
+        change_signature(new)
+        print(f"[!] Changed your signature to '{new}'")
+
+    elif msg.startswith("/togglelog"):
+        from scripts.client import toggle_log
+        toggle_log()
+        # print("Toggled your logging settings")
+
+    elif msg.startswith("/toggledebug"):
+        from scripts.client import toggle_debug
+        toggle_debug()

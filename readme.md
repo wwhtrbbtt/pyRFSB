@@ -36,6 +36,12 @@ the commands are:
 - /emojis - see all available emojis
 - /commands - see all available commands
 
+	(only temporary)
+- /setsignature <newSignature> - change your signature
+- /togglelog - toggle if you wanna log all messages into a text file
+- /toggledebug - toggle debug mode
+
+
 ## What are the limitations?
 
 There are a few small limitations.

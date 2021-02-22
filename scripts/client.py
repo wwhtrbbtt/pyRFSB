@@ -11,6 +11,21 @@ m = 0
 DEBUG = 0
 SIGNATURE = 0
 TOKEN = 0
+LOG = 0
+
+def change_signature(new):
+    global SIGNATURE
+    SIGNATURE = " " + new
+
+def toggle_log():
+    global LOG
+    LOG = not LOG
+    print(f"[+] logging: {LOG}")
+
+def toggle_debug():
+    global DEBUG
+    DEBUG = not DEBUG
+    print(f"[+] debug: {DEBUG}")
 
 def pingThread(ws):
     global DEBUG
@@ -45,13 +60,17 @@ def run(ws):
         # execute if command, send the message if otherwise
         while 1:
             msg = input()
-            if msg[0] == "/":
-                commands(msg)
-            else:
-                format = m.send_message(msg + SIGNATURE)
-                ws.send(format)
+            try:
+                if msg[0] == "/":
+                    commands(msg)
+                else:
+                    format = m.send_message(msg + SIGNATURE)
+                    ws.send(format)
+            except IndexError:
+                print("[!] cant send empty message")
 
 def on_message(ws, message):
+    global LOG
     global DEBUG
     """
     whenever we receive a packet from raidforums.
@@ -60,7 +79,7 @@ def on_message(ws, message):
     global oldTime
     if DEBUG:
         print(f"⬇️ packet")
-    parse(message, DEBUG=DEBUG)
+    parse(message, LOG, DEBUG=DEBUG)
 
 
 def on_error(ws, error):
@@ -89,15 +108,17 @@ def on_open(ws):
     Thread(target=pingThread, args=[ws]).start()
 
 
-def main(nDEBUG, nSIGNATURE, nTOKEN):
+def main(nDEBUG, nSIGNATURE, nTOKEN, nLOG):
     global DEBUG
     global SIGNATURE
     global TOKEN
+    global LOG
     global m
 
     DEBUG = nDEBUG
     SIGNATURE = nSIGNATURE
     TOKEN = nTOKEN
+    LOG = nLOG
     m = message_formats(TOKEN)
 
     # clear the screen
